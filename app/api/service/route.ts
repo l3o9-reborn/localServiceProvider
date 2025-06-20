@@ -55,10 +55,12 @@ export async function POST(request: NextRequest) {
       data,
     })
   } catch (error) {
+
+    const err = error as Error
     // 
-    console.error('Error submitting service:', error)
+    console.error('Error submitting service:', err)
     return NextResponse.json(
-      { message: 'Error submitting service', error: error.message },
+      { message: 'Error submitting service', error: err.message },
       { status: 500 },  
     )
   }
