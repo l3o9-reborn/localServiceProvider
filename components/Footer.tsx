@@ -10,13 +10,13 @@ function Footer() {
               <p className="text-sm">© 2025 LeoCorp. All rights reserved.</p>
             </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-sm hover:underline">
+              <a href="/privacy-policy" className="text-sm hover:underline">
                 Privacy Policy
               </a>
-              <a href="#" className="text-sm hover:underline">
+              <a href="/terms-of-service" className="text-sm hover:underline">
                 Terms of Service
               </a>
-              <a href="#" className="text-sm hover:underline">
+              <a href="/contact" className="text-sm hover:underline">
                 Contact Us
               </a>
             </div>

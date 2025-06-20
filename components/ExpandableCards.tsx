@@ -12,7 +12,7 @@ export function ExpandableCardDemo({
 }: {
   cards: CustomerPresentableInterface[]
   activeId?: string | number | null
-  onCardClick?: (id: string | number) => void
+  onCardClick?: (id: string | number | null) => void
 }) {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null,
@@ -45,10 +45,11 @@ export function ExpandableCardDemo({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [active])
 
-  useOutsideClick(ref, () => {
+  useOutsideClick(ref as React.RefObject<HTMLDivElement>, () => {
     setActive(null)
     onCardClick?.(null)
   })
+
 
   return (
     <div className="font-mono">

@@ -23,7 +23,7 @@ const CUSTOMER_ICON = L.icon({
 })
 
 // Fix Leaflet Icon Issue
-delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl
+delete ((L.Icon.Default.prototype as unknown) as Record<string, unknown>)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconUrl: PROVIDER_ICON.options.iconUrl,
   shadowUrl: PROVIDER_ICON.options.shadowUrl,

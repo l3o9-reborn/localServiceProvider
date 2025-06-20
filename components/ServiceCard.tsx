@@ -2,13 +2,13 @@ import React from 'react'
 import { Card, CardTitle, CardContent, CardHeader } from './ui/card'
 
 type ServiceCardProps = {
-  logo?: React.ReactNode // Optional logo icon
+  logo: React.ElementType// Optional logo icon
   title: string
   description: string
 }
 
 function ServiceCard(props: ServiceCardProps) {
-  const { logo, title, description } = props
+  const { logo: logo, title, description } = props
   return (
     <Card className="bg-gray-700 h-full p-6 hover:scale-105 transition-transform duration-300 shadow-lg">
       <CardHeader className="flex items-center justify-center">

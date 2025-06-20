@@ -14,7 +14,7 @@ export default function GetServicePage() {
     serviceName: '',
     lat: null,
     lng: null,
-    distance: '', // Default distance in KM
+    distance: 5, // Default distance in KM
   })
 
   const [data, setData] = useState<CustomerPresentableInterface[]>([])
@@ -69,7 +69,10 @@ export default function GetServicePage() {
                 ? { lat: form.lat, lng: form.lng }
                 : null
             }
-            providers={data}
+            providers={data.filter(
+                (p): p is CustomerPresentableInterface & { lat: number; lng: number } =>
+                  typeof p.lat === 'number' && typeof p.lng === 'number'
+              )}
             selectedProviderId={selectedProviderId}
             onMarkerClick={(id) => setSelectedProviderId(id)}
           />

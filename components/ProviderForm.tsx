@@ -39,7 +39,7 @@ function ProviderForm() {
   }
 
 
-  const handleImageChage = (file: File | null) => {
+  const handleImageChage = (file: File | '') => {
     setForm((prev) => ({
       ...prev,
       image: file || '',

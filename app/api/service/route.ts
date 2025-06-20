@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     console.error('Error submitting service:', err)
     return NextResponse.json(
       { message: 'Error submitting service', error: err.message },
-      { status: 500 },  
+      { status: 500 },
     )
   }
 }

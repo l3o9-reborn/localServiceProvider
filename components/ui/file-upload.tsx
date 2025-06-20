@@ -33,25 +33,35 @@ export const FileUpload = ({
   const [file, setFile] = useState<File | ''>('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = (file: File | '') => {
-    setFile(file)
-    onChange?.(file)
-  }
-  
-  
+  // const handleFileChange = (file: File | '') => {
+  //   setFile(file)
+  //   onChange?.(file)
+  // }
+const handleFileDrop = (acceptedFiles: File[]) => {
+  const file = acceptedFiles[0] || ''
+  setFile(file)
+  onChange?.(file)
+}
+
+const handleFileInputChange = (file: File | '') => {
+  setFile(file)
+  onChange?.(file)
+}
+
 
   const handleClick = () => {
     fileInputRef.current?.click()
   }
 
-  const { getRootProps, isDragActive } = useDropzone({
-    multiple: false,
-    noClick: true,
-    onDrop: handleFileChange,
-    onDropRejected: (error) => {
-      console.log(error)
-    },
-  })
+const { getRootProps, isDragActive } = useDropzone({
+  multiple: false,
+  noClick: true,
+  onDrop: handleFileDrop,
+  onDropRejected: (error) => {
+    console.log(error)
+  },
+})
+
 
   return (
     <div className="w-full" {...getRootProps()}>
@@ -65,9 +75,10 @@ export const FileUpload = ({
           id="file-upload-handle"
           type="file"
           accept="image/*"
-          onChange={(e) => handleFileChange(e.target.files?.[0] || '')}
+          onChange={(e) => handleFileInputChange(e.target.files?.[0] || '')}
           className="hidden"
         />
+
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
           <GridPattern />
         </div>
