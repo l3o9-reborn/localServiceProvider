@@ -1,7 +1,6 @@
 'use client'
 import React , {useState} from 'react'
 import { ContactWithEmailInterface } from '@/lib/serviceFormInterface'
-import loadingPage from '@/app/loading'
 
 function SendAMessage() {
 
@@ -107,7 +106,7 @@ const handleChange = (
           type="submit"
           className="w-full bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-500 transition duration-200"
         >
-         { loading? "loading ..." : "Send Message"}
+         { loading? "Sending ..." : "Send Message"}
         </button>
         
       </form>

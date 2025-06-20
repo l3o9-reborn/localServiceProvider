@@ -85,7 +85,7 @@ function OurGoal() {
           </li>
         </ul>
         <h4 className="text-amber-600">
-          Whether you're offering a service or need one, we’re here to bridge
+          Whether you&#39;re offering a service or need one, we’re here to bridge
           that gap — locally, affordably, and transparently.
         </h4>
       </div>

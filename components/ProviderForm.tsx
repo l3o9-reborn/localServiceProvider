@@ -1,9 +1,7 @@
 'use client '
-import React, { useEffect, useState } from 'react'
-import { Phone, MapPin, Map } from 'lucide-react'
+import React, {  useState } from 'react'
 import { FileUpload } from './ui/file-upload'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
-import axios from 'axios'
 import LoadingPage from '@/app/loading'
 
 // import LocationPicker from './LocationPicker'
@@ -40,17 +38,6 @@ function ProviderForm() {
     }))
   }
 
-  const handleArrayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
-        .split(',')
-        .map((s) => s)
-        .filter(Boolean),
-    }))
-  }
 
   const handleImageChage = (file: File | null) => {
     setForm((prev) => ({
@@ -112,6 +99,13 @@ function ProviderForm() {
 
   if(loading) {
     return <LoadingPage />
+  }
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="text-red-500">An error occurred. Please try again.</h1>
+      </div>
+    )
   }
 
   return (

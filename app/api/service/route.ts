@@ -95,7 +95,8 @@ export async function GET(request: NextRequest) {
 
     // Filter and map to include distance
     const filtered = data
-      .map((service: any) => {
+     //fixed eslint error any 
+      .map((service: ServiceFormInterface) => {
         if (
           !Array.isArray(service.services) ||
           typeof service.lat !== 'number' ||
@@ -121,10 +122,12 @@ export async function GET(request: NextRequest) {
       .filter(Boolean) // Remove nulls
 
     return NextResponse.json(filtered)
-  } catch (error: any) {
+  } catch (error) {
+    //fixed eslint error any 
+    const err = error as Error
     console.error('Error fetching service:', error)
     return NextResponse.json(
-      { message: 'Error fetching service', error: error.message },
+      { message: 'Error fetching service', error: err.message },
       { status: 500 },
     )
   }

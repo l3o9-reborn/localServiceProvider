@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { MapPin, Search } from 'lucide-react'
+import React, {  useState } from 'react'
+import { Search } from 'lucide-react'
 import { ExpandableCardDemo } from '@/components/ExpandableCards'
 import { ServiceFinderDetails, CustomerPresentableInterface } from '@/lib/serviceFormInterface'
 import dynamic from 'next/dynamic'

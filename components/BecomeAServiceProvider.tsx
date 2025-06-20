@@ -1,6 +1,5 @@
 import React from 'react'
 import Lottie from 'lottie-react'
-import { serviceProviderSection } from '@/utils/constants'
 import providerAnimation from '../public/Animation - 1749647573543.json'
 
 function BecomeAServiceProvider() {
@@ -18,7 +17,7 @@ function BecomeAServiceProvider() {
           </p>
           <p className=" text-body text-gray-500">
             At <span className="text-amber-500 underline">Contact Pro</span>, we
-            believe everyone has a skill worth sharing. Whether you're a
+            believe everyone has a skill worth sharing. Whether you&#39;re a
             professional or just passionate about helping others, this is your
             chance to grow your income and reputation — right in your own
             community.
