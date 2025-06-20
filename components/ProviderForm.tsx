@@ -100,13 +100,7 @@ function ProviderForm() {
   if(loading) {
     return <LoadingPage />
   }
-  if (error) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <h1 className="text-red-500">An error occurred. Please try again.</h1>
-      </div>
-    )
-  }
+
 
   return (
     <div className="h-full bg-gray-100 md:p-10   font-mono">
@@ -261,12 +255,19 @@ function ProviderForm() {
             <FileUpload onChange={handleImageChage} />
           </div>
 
+          {error && (
+            <div className="text-center text-red-500 mt-2 p-4 text-bold">
+              Please fill in all required fields.
+            </div>
+          )}
+
           <button
             type="submit"
             className="w-full px-12 py-4 bg-amber-600 rounded-md text-gray-50 font-bold hover:bg-amber-500"
           >
             Register As a Service Provider
           </button>
+          
         </form>
       </div>
     </div>
