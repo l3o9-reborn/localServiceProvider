@@ -13,6 +13,7 @@ export interface ServiceFinderDetails {
   serviceName: string
   lat: number | null
   lng: number | null
+  distance: number
 }
 
 
@@ -28,4 +29,10 @@ export interface CustomerPresentableInterface {
   lng: number | null,
   image: string,
   created_at: string,
+}
+
+export interface ContactWithEmailInterface {
+  name: string
+  email: string
+  message: string
 }

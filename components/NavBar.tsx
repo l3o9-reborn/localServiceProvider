@@ -1,6 +1,6 @@
 'use client'
 import React, { useRef, useState } from 'react'
-import { navElements } from '@/utils/constants'
+import { navElementsWithLinks } from '@/utils/constants'
 import Image from 'next/image'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -24,38 +24,30 @@ function NavBar() {
     <div className=" bg-gray-200 h-[60px] flex items-center justify-between px-4 mx-auto relative">
       <div
         onClick={() => router.push('/')}
-        className="logo text-2xl font-bold "
+        className="logo text-2xl font-bold h-[60px] flex items-center  overflow-hidden cursor-pointer"
       >
         <Image src="/L.png" alt="Logo" width={100} height={100}></Image>
       </div>
-      <div className="hidden">
-        {navElements.map((element, index) => (
-          <span
-            key={index}
-            className="text-amber-600 mx-2 cursor-pointer hover:underline"
-          >
-            {element}
-          </span>
-        ))}
-      </div>
+
       {slider && (
         <div
           ref={navRef}
           className="absolute  top-15 right-0 w-[300px] h-[65vh] bg-gray-800 opacity-80 flex flex-col items-center justify-center z-50"
         >
-          {navElements.map((element, index) => (
+          {navElementsWithLinks.map((element, index) => (
             <span
               key={index}
-              className="text-amber-600 my-2 text-xl cursor-pointer hover:underline"
+              className=" text-amber-600 my-2 text-xl cursor-pointer hover:underline"
+              onClick={() => router.push(element.link)}
             >
-              {element}
+              {element.name}
             </span>
           ))}
         </div>
       )}
       <div>
         <button
-          className="text-amber-600 font-bold "
+          className=" cursor-pointer text-amber-600 "
           onClick={() => setSlider(!slider)}
         >
           {!slider ? '|||' : 'X'}

@@ -1,79 +1,61 @@
 import {
-  Pen,
-  WallpaperIcon,
-  FileStackIcon,
-  MonitorSmartphoneIcon,
-  MonitorCogIcon,
-  Brush,
-  ListTreeIcon,
-  FileVideo2,
+  CircuitBoardIcon,
+  
+  Hammer,
+  Truck,
+  BookOpen,
+  BrushCleaning,
+
 } from 'lucide-react'
 import { title } from 'process'
 
-export const navElements = ['Home', 'About', 'Services', 'Contact']
 
+export const navElementsWithLinks = [
+  { name: 'Home', link: '/' },
+  { name: 'Get Service Near You', link: '/getservice' },
+  { name: 'Be A Service Provider', link: '/beaserviceprovider' },
+  { name: 'About Us', link: '/about' },
+  { name: 'Contact Us', link: '/contact' },
+]
 const popularServices = [
   {
-    logo: Brush,
-    service: 'Graphic Design',
+    logo: CircuitBoardIcon,
+    service: 'Electrician',
     description:
-      'Logo, banner, flyer, and business card designs tailored for local businesses and events.',
+      'Expert help with wiring, fan/light installation, power issues, and other electrical repairs for homes and shops.',
   },
   {
-    logo: MonitorCogIcon,
-    service: 'Web Development',
+    logo: Hammer,
+    service: 'Plumber',
     description:
-      'Build modern websites using HTML, CSS, JavaScript, and popular frameworks like React or WordPress.',
+      'Quick fixes for pipe leaks, bathroom fittings, kitchen sinks, water tanks, and plumbing maintenance.',
   },
   {
-    logo: Pen,
-    service: 'Content Writing',
+    logo: Hammer,
+    service: 'House Building',
     description:
-      'Blog posts, social media captions, SEO articles, and Bengali-English translation services.',
+      'Skilled labor and contractor support for building homes, boundary walls, and small construction projects.',
   },
   {
-    logo: ListTreeIcon,
-    service: 'Digital Marketing',
+    logo: Truck,
+    service: 'Help Moving',
     description:
-      'Social media management, Facebook ads, Google ads, and local brand promotion strategies.',
+      'Reliable moving help for shifting houses, office setups, or transporting furniture and appliances locally.',
   },
   {
-    logo: FileVideo2,
-    service: 'Video Editing',
+    logo: BookOpen,
+    service: 'Tuition',
     description:
-      'Short-form and long-form video editing for YouTube, weddings, and online businesses.',
+      'Qualified home tutors for school students (Bangla & English medium), SSC/HSC prep, and subject-wise support.',
   },
   {
-    logo: MonitorSmartphoneIcon,
-    service: 'Mobile App  Dev',
+    logo: BrushCleaning,
+    service: 'Cleaning',
     description:
-      'Android/iOS app development using Flutter or React Native for small businesses and startups.',
+      'Affordable home, office, and deep cleaning services including washroom, floor, and kitchen cleanup.',
   },
-  // {
-  //   service: "Data Entry",
-  //   description: "Fast and accurate data entry services for school, clinic, and small business databases."
-  // },
-  // {
-  //   service: "Online Tutoring",
-  //   description: "Math, English, and ICT tutoring via Zoom or Google Meet for school and college students."
-  // },
-  // {
-  //   service: "UI/UX Design",
-  //   description: "User interface and experience design for websites and apps using Figma or Adobe XD."
-  // },
-  // {
-  //   service: "Voice Over & Dubbing",
-  //   description: "Professional voice-over services in Bengali, English, or regional dialects for ads and videos."
-  // },
-  // {
-  //   service: "Resume & CV Writing",
-  //   description: "Professional CV, resume, and cover letter writing for job seekers and students."
-  // },
-  // {
-  //   service: "Translation Services",
-  //   description: "Document and subtitle translation between English, Bengali, Hindi, and other local languages."
-  // },
-]
+];
+
 export const popularServicesData = popularServices.map((service, index) => ({
   id: index + 1,
   ...service,

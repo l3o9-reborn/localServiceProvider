@@ -4,6 +4,7 @@ import { Phone, MapPin, Map } from 'lucide-react'
 import { FileUpload } from './ui/file-upload'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
 import axios from 'axios'
+import LoadingPage from '@/app/loading'
 
 // import LocationPicker from './LocationPicker'
 
@@ -61,6 +62,22 @@ function ProviderForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log(form)
+      // Validate required fields
+  if (
+    !form.name.trim() ||
+    !form.number.trim() ||
+    !form.services.length ||
+    !form.skills.length ||
+    !form.bio.trim() ||
+    form.lat === null ||
+    form.lng === null ||
+    !form.image
+  ) {
+    setError(true)
+    alert('Please fill in all required fields.')
+    return
+  }
+
     try {
       const formData = new FormData()
       formData.append('name', form.name)
@@ -86,10 +103,15 @@ function ProviderForm() {
 
       setLoading(false)
       setError(false)
+      alert('Service submitted successfully!')
     } catch (error) {
       setError(true)
       console.error('Error submitting service:', error)
     }
+  }
+
+  if(loading) {
+    return <LoadingPage />
   }
 
   return (
@@ -226,15 +248,19 @@ function ProviderForm() {
           {/* here I want to integrate map input */}
           <div>
             <div>Pick Your Working Location</div>
-            <LocationPicker
-              onLocationSelect={(location) => {
-                setForm((prev) => ({
-                  ...prev,
-                  lat: location.lat,
-                  lng: location.lng,
-                }))
-              }}
-            />
+                     <LocationPicker
+            onLocationSelect={(location) => {
+              setForm((prev) => ({ ...prev, lat: location.lat, lng: location.lng }))
+            }}
+            userLocation={
+              form.lat !== null && form.lng !== null
+                ? { lat: form.lat, lng: form.lng }
+                : null
+            }
+            providers={[]}
+            selectedProviderId={null}
+            onMarkerClick={() => null}
+          />
           </div>
 
           <div>

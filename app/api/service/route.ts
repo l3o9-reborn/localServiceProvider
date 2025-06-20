@@ -69,7 +69,8 @@ export async function GET(request: NextRequest) {
   const serviceName = searchParams.get('serviceName')
   const lat = parseFloat(searchParams.get('lat') || '')
   const lng = parseFloat(searchParams.get('lng') || '')
-  const radiusKm = 500
+  const distance = parseFloat(searchParams.get('distance') || '')
+  const radiusKm = distance || 5 // Default to 5 KM if not provided
 
   function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
     const R = 6371

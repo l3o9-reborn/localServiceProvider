@@ -1,52 +1,48 @@
+// File: components/LocationPicker.tsx
 'use client'
-import React, { useEffect, useState } from 'react'
-import { MapPin } from 'lucide-react'
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMap,
-  useMapEvents,
-} from 'react-leaflet'
+import React from 'react'
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { MapPin } from 'lucide-react'
 
-// Fix marker icon issue for Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl
-L.Icon.Default.mergeOptions({
+// Marker icons
+const PROVIDER_ICON = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 })
 
-// Types
-type LatLng = {
+const ACTIVE_PROVIDER_ICON = L.icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+})
+
+const CUSTOMER_ICON = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+})
+
+// Fix Leaflet Icon Issue
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconUrl: PROVIDER_ICON.options.iconUrl,
+  shadowUrl: PROVIDER_ICON.options.shadowUrl,
+})
+
+export type LatLng = {
   lat: number
   lng: number
 }
 
-type Props = {
+interface LocationPickerProps {
   onLocationSelect?: (location: LatLng) => void
+  providers?: { id: string | number, lat: number, lng: number, name?: string }[]
+  selectedProviderId?: string | number | null
+  onMarkerClick?: (id: string | number) => void
+  userLocation?: LatLng | null
 }
 
-type LocationMarkerProps = {
-  position: LatLng | null
-}
-
-type LocationEventsProps = {
-  onSelect: (latlng: LatLng) => void
-}
-
-type UseCurrentLocationButtonProps = {
-  setPosition: (pos: LatLng) => void
-}
-
-// Marker Component
-function LocationMarker({ position }: LocationMarkerProps) {
-  return position ? <Marker position={position} /> : null
-}
-
-// Click Events on Map
-function LocationEvents({ onSelect }: LocationEventsProps) {
+function LocationEvents({ onSelect }: { onSelect: (latlng: LatLng) => void }) {
   useMapEvents({
     click(e) {
       onSelect(e.latlng)
@@ -55,66 +51,51 @@ function LocationEvents({ onSelect }: LocationEventsProps) {
   return null
 }
 
-// Button to Get Current Location
-function UseCurrentLocationButton({
-  setPosition,
-}: UseCurrentLocationButtonProps) {
+function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLng) => void }) {
   const map = useMap()
-
   const handleClick = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation not supported.')
-      return
-    }
+    if (!navigator.geolocation) return alert('Geolocation not supported')
 
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        const { latitude, longitude } = coords
-        const newLatLng = { lat: latitude, lng: longitude }
-        setPosition(newLatLng)
-        map.setView(newLatLng, 15)
+        const pos = { lat: coords.latitude, lng: coords.longitude }
+        setPosition(pos)
+        map.setView(pos, 15)
       },
-      (err) => {
-        alert('Failed to get location.')
-        console.error(err)
-      },
+      () => alert('Failed to get current location')
     )
   }
-
   return (
     <button
-      type="button"
-      onClick={handleClick}
-      className="absolute z-[999] bottom-10 right-10 px-4 py-2 text-sm bg-gray-800 border rounded-full shadow-xl hover:bg-gray-100"
-    >
+      type='button'
+    onClick={handleClick} className="absolute bottom-10 right-10 z-[999] px-4 py-2 bg-white rounded-full shadow">
       <MapPin className="text-amber-600" />
     </button>
   )
 }
 
-// Main Exported Component
-export default function LocationPicker({ onLocationSelect }: Props) {
-  const [position, setPosition] = useState<LatLng | null>(null)
-
-  useEffect(() => {
-    if (position && onLocationSelect) {
-      onLocationSelect(position)
-    }
-  }, [position])
-
-  //here dependencies were postion and onPositionSelect
-
+export default function LocationPicker({
+  onLocationSelect,
+  providers = [],
+  selectedProviderId,
+  onMarkerClick,
+  userLocation,
+}: LocationPickerProps) {
   return (
-    <div className="relative h-[400px] w-full rounded-md overflow-hidden">
-      <MapContainer
-        center={[23.8103, 90.4125]}
-        zoom={13}
-        className="h-full w-full z-0"
-      >
+    <div className="relative z-1 h-[400px] w-full rounded-md overflow-hidden">
+      <MapContainer center={[23.8103, 90.4125]} zoom={13} className="h-full w-full">
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <LocationEvents onSelect={setPosition} />
-        <LocationMarker position={position} />
-        <UseCurrentLocationButton setPosition={setPosition} />
+        {onLocationSelect && <LocationEvents onSelect={onLocationSelect} />}
+        {userLocation && <Marker position={userLocation} icon={CUSTOMER_ICON} />}
+        {providers.map((p) => (
+          <Marker
+            key={p.id}
+            position={{ lat: p.lat, lng: p.lng }}
+            icon={p.id === selectedProviderId ? ACTIVE_PROVIDER_ICON : PROVIDER_ICON}
+            eventHandlers={{ click: () => onMarkerClick?.(p.id) }}
+          />
+        ))}
+        {onLocationSelect && <UseCurrentLocationButton setPosition={onLocationSelect} />}
       </MapContainer>
     </div>
   )

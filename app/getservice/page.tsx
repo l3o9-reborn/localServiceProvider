@@ -2,88 +2,94 @@
 import React, { useEffect, useState } from 'react'
 import { MapPin, Search } from 'lucide-react'
 import { ExpandableCardDemo } from '@/components/ExpandableCards'
-// import LocationPicker from '@/components/LocationPicker'
-import { ServiceFinderDetails , CustomerPresentableInterface} from '@/lib/serviceFormInterface'
-
-import axios from 'axios'
-
+import { ServiceFinderDetails, CustomerPresentableInterface } from '@/lib/serviceFormInterface'
 import dynamic from 'next/dynamic'
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
   ssr: false,
 })
 
-function GetServicePage() {
+export default function GetServicePage() {
   const [form, setForm] = useState<ServiceFinderDetails>({
     serviceName: '',
     lat: null,
     lng: null,
+    distance: '', // Default distance in KM
   })
 
   const [data, setData] = useState<CustomerPresentableInterface[]>([])
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log(form);
+  const [selectedProviderId, setSelectedProviderId] = useState<string | number | null>(null)
 
-  // Build query string
-  const params = new URLSearchParams();
-  if (form.serviceName) params.append('serviceName', form.serviceName);
-  if (form.lat !== null) params.append('lat', String(form.lat));
-  if (form.lng !== null) params.append('lng', String(form.lng));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const params = new URLSearchParams()
+    if (form.serviceName) params.append('serviceName', form.serviceName)
+    if (form.lat !== null) params.append('lat', String(form.lat))
+    if (form.lng !== null) params.append('lng', String(form.lng))
+    if( form.distance) params.append('distance', String(form.distance))
 
-  try {
-    const res = await fetch(`/api/service?${params.toString()}`);
-    const data = await res.json();
-    console.log('Service Data:', data);
-    setData(data);
-    // Do something with the data (e.g., set state to display results)
-  } catch (error) {
-    console.error('Error submitting service:', error);
+    try {
+      const res = await fetch(`/api/service?${params.toString()}`)
+      const data = await res.json()
+      setData(data)
+    } catch (err) {
+      console.error('Error fetching services:', err)
+    }
   }
-};
-
-
 
   return (
-    <div className="w-full min-h-[100vh] h-full p-10">
-      <div className="w-full h-full  bg-gray-50  rounded-md ">
-        <form action="" onSubmit={handleSubmit}>
+    <div className="w-full min-h-screen p-10">
+      <div className="w-full bg-gray-50 rounded-md p-4">
+        <form onSubmit={handleSubmit}>
           <input
             value={form.serviceName}
-            onChange={(e) => {
+            onChange={(e) =>
               setForm((prev) => ({ ...prev, serviceName: e.target.value }))
-            }}
+            }
             placeholder="What Service You Want?"
             type="text"
-            className="w-full bg-white rounded-md  h-15 px-4 border-2 border-amber-600 flex flex-1 text-gray-800 focus:border-amber-500 outline-none"
+            className="w-full bg-white rounded-md h-12 px-4 border-2 border-amber-600 text-gray-800 outline-none mb-2"
+          />
+          <input
+            type="number"
+            value={form.distance}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, distance: Number(e.target.value) }))
+            }
+            placeholder="Max Distance (KM)"
+            className="w-full bg-white rounded-md h-12 px-4 border-2 border-amber-600 text-gray-800 outline-none mb-2"
           />
 
-          {/* <MapPin  className='text-gray-50 hover:scale-160'/> */}
           <LocationPicker
             onLocationSelect={(location) => {
-              setForm((prev) => ({
-                ...prev,
-                lat: location.lat,
-                lng: location.lng,
-              }))
+              setForm((prev) => ({ ...prev, lat: location.lat, lng: location.lng }))
             }}
+            userLocation={
+              form.lat !== null && form.lng !== null
+                ? { lat: form.lat, lng: form.lng }
+                : null
+            }
+            providers={data}
+            selectedProviderId={selectedProviderId}
+            onMarkerClick={(id) => setSelectedProviderId(id)}
           />
+
           <button
             type="submit"
-            className="w-full h-15 bg-amber-600 rounded-md mt-1  flex items-center justify-center hover:bg-amber-400"
+            className="w-full h-12 bg-amber-600 rounded-md mt-2 flex items-center justify-center hover:bg-amber-500 text-white"
           >
-            <Search className="text-gray-50 hover:scale-160" />
+            <Search />
           </button>
         </form>
       </div>
-      {/* <div className='h-[60vh] w-full bg-white pt-2'>
-            {
-                Array.from({length:10}).map(_)
-            }
-         </div> */}
-      <ExpandableCardDemo cards={data}/>
+
+      <div className="mt-6">
+        <ExpandableCardDemo
+          cards={data}
+          activeId={selectedProviderId}
+          onCardClick={(id) => setSelectedProviderId(id)}
+        />
+      </div>
     </div>
   )
 }
-
-export default GetServicePage

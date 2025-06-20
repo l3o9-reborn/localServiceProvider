@@ -12,7 +12,7 @@ export default function Home() {
       <Hero />
       <PopularServices />
       <ServiceProviderSection />
-      {/* <OurGoal/> */}
+      <OurGoal/>
       <SendAMessage />
     </div>
   )
