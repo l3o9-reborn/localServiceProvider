@@ -38,7 +38,7 @@ export default function GetServicePage() {
   }
 
   return (
-    <div className="w-full min-h-screen p-10">
+    <div className="w-full min-h-screen md:p-10">
       <div className="w-full bg-gray-50 rounded-md p-4">
         <form onSubmit={handleSubmit}>
           <input

@@ -8,7 +8,7 @@ function ServiceCardGroup() {
       <div className="text-heading text-center py-4 text-gray-400">
         Explore Beyond Limit
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-3 justify-items-center gap-4 mx-auto">
+      <div className=" overflow-hidden grid grid-cols-1 xl:grid-cols-3 justify-items-center gap-4 mx-auto">
         {serviceCardsData.map((card, index) => (
           <GroupCard
             key={index}
