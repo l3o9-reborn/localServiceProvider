@@ -54,7 +54,10 @@ function LocationEvents({ onSelect }: { onSelect: (latlng: LatLng) => void }) {
 function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLng) => void }) {
   const map = useMap()
   const handleClick = () => {
-    if (!navigator.geolocation) return alert('Geolocation not supported')
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.')
+      return
+    }
 
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
@@ -62,13 +65,24 @@ function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLn
         setPosition(pos)
         map.setView(pos, 15)
       },
-      () => alert('Failed to get current location')
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          alert('Location permission denied. Please enable location access in your browser settings.')
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert('Location information is unavailable.')
+        } else if (error.code === error.TIMEOUT) {
+          alert('The request to get your location timed out. Please try again.')
+        } else {
+          alert('Failed to get current location.')
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     )
   }
   return (
     <button
       type='button'
-    onClick={handleClick} className="absolute bottom-10 right-10 z-[999] px-4 py-2 bg-white rounded-full shadow">
+    onClick={handleClick} className="absolute bottom-6 right-4 z-[999] px-4 py-2 bg-white rounded-full shadow hover:scale-125 hover:bg-gray-200 transition-transform duration-300">
       <MapPin className="text-amber-600" />
     </button>
   )
@@ -82,7 +96,7 @@ export default function LocationPicker({
   userLocation,
 }: LocationPickerProps) {
   return (
-    <div className="relative z-1 h-[400px] w-full rounded-md overflow-hidden">
+    <div className="relative z-1 h-[150px] md:h-[400px] w-full rounded-md overflow-hidden">
       <MapContainer center={[23.8103, 90.4125]} zoom={13} className="h-full w-full">
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {onLocationSelect && <LocationEvents onSelect={onLocationSelect} />}

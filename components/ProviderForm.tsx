@@ -79,7 +79,7 @@ function ProviderForm() {
       }
 
       setLoading(true)
-      const res = await fetch('http://localhost:3000/api/service', {
+      const res = await fetch('/api/service', {
         method: 'POST',
         body: formData,
       })
