@@ -22,6 +22,7 @@ export default function GetServicePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Form submitted:', form)
     const params = new URLSearchParams()
     if (form.serviceName) params.append('serviceName', form.serviceName)
     if (form.lat !== null) params.append('lat', String(form.lat))
@@ -31,6 +32,7 @@ export default function GetServicePage() {
     try {
       const res = await fetch(`/api/service?${params.toString()}`)
       const data = await res.json()
+      console.log('Fetched services:', data)
       setData(data)
     } catch (err) {
       console.error('Error fetching services:', err)

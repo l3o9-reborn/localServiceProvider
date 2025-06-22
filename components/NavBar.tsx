@@ -21,7 +21,7 @@ function NavBar() {
   }, [slider])
 
   return (
-    <div className=" bg-gray-200 h-[60px] flex items-center justify-between px-4 mx-auto relative">
+    <div className="sticky z-99 top-0 bg-gray-200  h-[60px] flex items-center justify-between px-4 mx-auto relative">
       <div
         onClick={() => router.push('/')}
         className="logo text-2xl font-bold h-[60px] flex items-center  overflow-hidden cursor-pointer"
@@ -32,13 +32,14 @@ function NavBar() {
       {slider && (
         <div
           ref={navRef}
-          className="absolute  top-15 right-0 w-[300px] h-[65vh] bg-gray-800 opacity-80 flex flex-col items-center justify-center z-50"
+          
+          className="absolute  top-15 right-0 w-full h-[95vh] md:w-[300px] md:h-[97vh] bg-gray-800 shadow-[-8px_0_8px_-4px_rgba(255,179,0,.5)]  flex flex-col items-center justify-center z-50"
         >
           {navElementsWithLinks.map((element, index) => (
             <span
               key={index}
-              className=" text-amber-600 my-2 text-xl cursor-pointer hover:underline"
-              onClick={() => router.push(element.link)}
+              className=" text-amber-600 my-2 text-xl cursor-pointer  "
+              onClick={() => (router.push(element.link), setSlider(false))}
             >
               {element.name}
             </span>

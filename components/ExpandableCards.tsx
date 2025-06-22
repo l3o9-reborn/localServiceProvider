@@ -214,12 +214,14 @@ export function ExpandableCardDemo({
                     {card.services.join(', ')}
                   </motion.p>
                   <motion.p
-                    layoutId={`description-${card}-${id}`}
-                    className="md:ml-10 inline-block text-amber-600 dark:text-amber-600 text-center md:text-left"
+                    layoutId={`description-${card.distance}-${id}`}
+                    className="md:ml-10 inline-block text-amber-600  text-center md:text-left"
                   >
-                    {card.distance !== undefined
-                      ? `${card.distance.toFixed(2)} KM Away`
-                      : ''}
+                    {
+                      card.distance !== undefined
+                        ? `${card.distance.toFixed(2)} KM Away`
+                        : ''
+                    }
                   </motion.p>
                 </div>
               </div>

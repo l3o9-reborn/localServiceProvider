@@ -1,6 +1,6 @@
 // File: components/LocationPicker.tsx
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -51,6 +51,14 @@ function LocationEvents({ onSelect }: { onSelect: (latlng: LatLng) => void }) {
   return null
 }
 
+function RecenterMap({ center }: { center: LatLng }) {
+  const map = useMap()
+  useEffect(() => {
+    map.setView(center, map.getZoom(), { animate: true })
+  }, [center, map])
+  return null
+}
+
 function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLng) => void }) {
   const map = useMap()
   const handleClick = () => {
@@ -63,7 +71,7 @@ function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLn
       ({ coords }) => {
         const pos = { lat: coords.latitude, lng: coords.longitude }
         setPosition(pos)
-        map.setView(pos, 15)
+        map.setView(pos,15)
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED) {
@@ -79,6 +87,7 @@ function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLn
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     )
   }
+
   return (
     <button
       type='button'
@@ -95,6 +104,31 @@ export default function LocationPicker({
   onMarkerClick,
   userLocation,
 }: LocationPickerProps) {
+
+
+const [autoLocated, setAutoLocated] = useState(false)
+
+  // Auto-locate only once on mount
+  useEffect(() => {
+    if (!autoLocated && onLocationSelect && typeof window !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          const pos = { lat: coords.latitude, lng: coords.longitude }
+          onLocationSelect(pos)
+          setAutoLocated(true)
+        },
+        () => {
+
+          // Optionally handle error
+          setAutoLocated(true)
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      )
+    }
+  }, [autoLocated, onLocationSelect])
+
+
+
   return (
     <div className="relative z-1 h-[150px] md:h-[400px] w-full rounded-md overflow-hidden">
       <MapContainer center={[23.8103, 90.4125]} zoom={13} className="h-full w-full">
@@ -109,6 +143,12 @@ export default function LocationPicker({
             eventHandlers={{ click: () => onMarkerClick?.(p.id) }}
           />
         ))}
+        {userLocation && (
+          <>
+            <Marker position={userLocation} icon={CUSTOMER_ICON} />
+            <RecenterMap center={userLocation} />
+          </>
+        )}
         {onLocationSelect && <UseCurrentLocationButton setPosition={onLocationSelect} />}
       </MapContainer>
     </div>

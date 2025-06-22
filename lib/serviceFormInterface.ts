@@ -13,7 +13,7 @@ export interface ServiceFinderDetails {
   serviceName: string
   lat: number | null
   lng: number | null
-  distance: number
+  distance: number | string
 }
 
 
