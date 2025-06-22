@@ -62,6 +62,7 @@ const handleChange = (
             onChange={handleChange}
             id="name"
             name="name"
+            placeholder='eg. Rahim Uddin'
             required
             className="border-2 border-gray-400 rounded-md w-full py-2 px-2"
           />
@@ -76,6 +77,7 @@ const handleChange = (
           </label>
           <input
             type="email"
+            placeholder='eg.  yourmail@address.com'
             value= {form.email}
             onChange={handleChange}
             id="email"
@@ -95,6 +97,7 @@ const handleChange = (
             id="message"
             value={form.message}
             onChange={handleChange}
+            placeholder='Write your message here...'
             name="message"
             rows={4}
             required

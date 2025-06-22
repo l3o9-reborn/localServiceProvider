@@ -119,6 +119,7 @@ function ProviderForm() {
             <input
               name="name"
               type="text"
+              placeholder='eg. Rahim Uddin'
               value={form.name}
               onChange={handleChange}
               className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
@@ -135,6 +136,7 @@ function ProviderForm() {
               name="number"
               value={form.number}
               onChange={handleChange}
+              placeholder='eg. +8801234567890'
               type="text"
               className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
@@ -148,6 +150,7 @@ function ProviderForm() {
             </label>
             <input
               value={servicesInput}
+              placeholder='eg. Plumber, Electrician, Carpenter, etc.'
               onChange={(e) => setServicesInput(e.target.value)}
               onBlur={() =>
                 setForm((prev) => ({
@@ -171,6 +174,7 @@ function ProviderForm() {
             </label>
             <input
               name="skills"
+              placeholder='eg. Plumbing, Electrical Work, Carpentry, etc.'
               value={skillsInput}
               onChange={(e) => setSkillsInput(e.target.value)}
               onBlur={() =>
@@ -195,6 +199,7 @@ function ProviderForm() {
             </label>
             <textarea
               name="bio"
+              placeholder='Tell us about your experience and services you provide'
               value={form.bio}
               onChange={handleChange}
               rows={6}

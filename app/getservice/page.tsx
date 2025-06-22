@@ -14,7 +14,7 @@ export default function GetServicePage() {
     serviceName: '',
     lat: null,
     lng: null,
-    distance: 5, // Default distance in KM
+    distance: '', // Default distance in KM
   })
 
   const [data, setData] = useState<CustomerPresentableInterface[]>([])
