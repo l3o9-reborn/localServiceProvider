@@ -71,6 +71,7 @@ export default function GetServicePage() {
                 ? { lat: form.lat, lng: form.lng }
                 : null
             }
+            distance={Number(form.distance) || 2}
             providers={data.filter(
                 (p): p is CustomerPresentableInterface & { lat: number; lng: number } =>
                   typeof p.lat === 'number' && typeof p.lng === 'number'

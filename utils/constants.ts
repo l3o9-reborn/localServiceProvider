@@ -14,6 +14,7 @@ export const navElementsWithLinks = [
   { name: 'Home', link: '/' },
   { name: 'Get Service Near You', link: '/getservice' },
   { name: 'Be A Service Provider', link: '/beaserviceprovider' },
+  { name: 'Your Contacts', link: '/your-contacts'},
   { name: 'About Us', link: '/about' },
   { name: 'Contact Us', link: '/contact' },
 ]

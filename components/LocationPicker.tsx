@@ -22,6 +22,23 @@ const CUSTOMER_ICON = L.icon({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 })
 
+
+
+const TILE_LAYERS = {
+  satellite: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution:
+      '&copy; <a href="https://www.esri.com/en-us/home">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+  },
+  street: {
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+}
+
+
+
+
 // Fix Leaflet Icon Issue
 delete ((L.Icon.Default.prototype as unknown) as Record<string, unknown>)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -40,6 +57,7 @@ interface LocationPickerProps {
   selectedProviderId?: string | number | null
   onMarkerClick?: (id: string | number) => void
   userLocation?: LatLng | null
+   distance?: number
 }
 
 function LocationEvents({ onSelect }: { onSelect: (latlng: LatLng) => void }) {
@@ -51,11 +69,18 @@ function LocationEvents({ onSelect }: { onSelect: (latlng: LatLng) => void }) {
   return null
 }
 
-function RecenterMap({ center }: { center: LatLng }) {
+// function RecenterMap({ center }: { center: LatLng }) {
+//   const map = useMap()
+//   useEffect(() => {
+//     map.setView(center, map.getZoom(), { animate: true })
+//   }, [center, map])
+//   return null
+// }
+function RecenterMap({ center, zoom }: { center: LatLng, zoom: number }) {
   const map = useMap()
   useEffect(() => {
-    map.setView(center, map.getZoom(), { animate: true })
-  }, [center, map])
+    map.setView(center, zoom, { animate: true })
+  }, [center, zoom, map])
   return null
 }
 
@@ -97,16 +122,30 @@ function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLn
   )
 }
 
+
+function getZoomFromDistance(distanceKm: number): number {
+  // This formula approximates the zoom level for a given distance (in km) at a given latitude
+  // 40075 is Earth's circumference in km
+  const worldMapWidth = 256 // in pixels
+  const mapWidth = window.innerWidth/2 || 1024 // fallback for SSR
+  // const metersPerPixel = (40075016.686 * Math.cos(latitude * Math.PI / 180)) / Math.pow(2, 0 + 8)
+  const zoom = Math.log2((40075 * 1000 * mapWidth) / (distanceKm * 1000 * worldMapWidth))
+  return Math.round(zoom -1)
+}
+
 export default function LocationPicker({
   onLocationSelect,
   providers = [],
   selectedProviderId,
   onMarkerClick,
   userLocation,
+  distance=2
 }: LocationPickerProps) {
 
 
 const [autoLocated, setAutoLocated] = useState(false)
+const [layer, setLayer] = useState<'satellite' | 'street'>('satellite')
+const zoom = getZoomFromDistance(distance || 2)
 
   // Auto-locate only once on mount
   useEffect(() => {
@@ -130,9 +169,24 @@ const [autoLocated, setAutoLocated] = useState(false)
 
 
   return (
-    <div className="relative z-1 h-[150px] md:h-[400px] w-full rounded-md overflow-hidden">
-      <MapContainer center={[23.8103, 90.4125]} zoom={13} className="h-full w-full">
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <div className="relative z-1 h-[300px] md:h-[400px] w-full rounded-md overflow-hidden">
+      <button
+        type="button"
+        className="absolute top-4 left-12 z-[1000] px-4 py-2 bg-white text-gray-900 rounded shadow text-sm font-semibold"
+        onClick={() => setLayer(layer === 'satellite' ? 'street' : 'satellite')}
+      >
+        {layer === 'satellite' ? 'Show Street Map' : 'Show Satellite'}
+      </button>
+      <MapContainer center={[23.8103, 90.4125]} zoom={zoom} className="h-full w-full">
+        {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
+        {/* <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; <a href="https://www.esri.com/en-us/home">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        /> */}
+        <TileLayer
+          url={TILE_LAYERS[layer].url}
+          attribution={TILE_LAYERS[layer].attribution}
+        />
         {onLocationSelect && <LocationEvents onSelect={onLocationSelect} />}
         {userLocation && <Marker position={userLocation} icon={CUSTOMER_ICON} />}
         {providers.map((p) => (
@@ -146,7 +200,7 @@ const [autoLocated, setAutoLocated] = useState(false)
         {userLocation && (
           <>
             <Marker position={userLocation} icon={CUSTOMER_ICON} />
-            <RecenterMap center={userLocation} />
+            <RecenterMap center={userLocation} zoom={zoom}/>
           </>
         )}
         {onLocationSelect && <UseCurrentLocationButton setPosition={onLocationSelect} />}

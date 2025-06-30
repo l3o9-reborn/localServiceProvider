@@ -6,7 +6,9 @@ export interface ServiceFormInterface {
   bio: string
   lat: number | null
   lng: number | null
-  image: File | string
+  image: File | string,
+  email?:string,
+  distance?: number | string
 }
 
 export interface ServiceFinderDetails {
@@ -29,6 +31,7 @@ export interface CustomerPresentableInterface {
   lng: number | null,
   image: string,
   created_at: string,
+  email?: string
 }
 
 export interface ContactWithEmailInterface {

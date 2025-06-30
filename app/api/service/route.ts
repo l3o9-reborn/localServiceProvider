@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '@/lib/supabase'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
+import { cookies } from 'next/headers'
+import { verifyJWT } from '@/lib/jwt' 
+
+
 
 export async function POST(request: NextRequest) {
   try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('auth_token')?.value
+    if (!token) {
+      return NextResponse.json({ message: 'Not authenticated' }, { status: 401 })
+    }
+
+    // Decode the JWT to get the email
+    const payload = verifyJWT(token)
+    if (!payload || typeof payload.email !== 'string') {
+      return NextResponse.json({ message: 'Invalid token payload' }, { status: 401 })
+    }
+    const email = payload.email
+
+
     const formData = await request.formData()
     const serviceForm: ServiceFormInterface = {
       name: formData.get('name') as string,
@@ -20,27 +38,30 @@ export async function POST(request: NextRequest) {
       lat: parseFloat(formData.get('lat') as string) || null,
       lng: parseFloat(formData.get('lng') as string) || null,
       image: formData.get('image') as File | string, // image can be a File or a string (path)
+      email,
     }
     
 
     // Handle file upload if image is a File
-    if (serviceForm.image instanceof File) {
-        console.log('Uploading image:', serviceForm.image.name)
-      const { data, error } = await supabase.storage
-        .from('serviceproviderimage')
-        .upload(
-          `services/${serviceForm.name}/${serviceForm.image.name}`,
-          serviceForm.image,
-        )
-      if (error) throw error
-    // Get public URL right after upload
-    const { data: publicUrlData } = supabase.storage
-        .from('serviceproviderimage')
-        .getPublicUrl(data.path)
+if (serviceForm.image instanceof File) {
+  const timestamp = Date.now()
+  const uniqueName = `${timestamp}-${serviceForm.image.name}`
+  console.log('Uploading image:', uniqueName)
+  const { data, error } = await supabase.storage
+    .from('serviceproviderimage')
+    .upload(
+      `services/${serviceForm.name}/${uniqueName}`,
+      serviceForm.image,
+    )
+  if (error) throw error
+  // Get public URL right after upload
+  const { data: publicUrlData } = supabase.storage
+    .from('serviceproviderimage')
+    .getPublicUrl(data.path)
 
-    // Store the full public URL
-    serviceForm.image = publicUrlData.publicUrl
-    }
+  // Store the full public URL
+  serviceForm.image = publicUrlData.publicUrl
+}
 
     console.log('Service Form Data:', serviceForm)
 
@@ -122,6 +143,7 @@ export async function GET(request: NextRequest) {
         return { ...service, distance }
       })
       .filter(Boolean) // Remove nulls
+      .sort((a, b) => (a!.distance as number) - (b!.distance as number)) // Sort by distance ascending
 
     return NextResponse.json(filtered)
   } catch (error) {

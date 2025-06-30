@@ -4,7 +4,7 @@ import providerAnimation from '../public/Animation - 1749647573543.json'
 
 function BecomeAServiceProvider() {
   return (
-    <div className="max-w-[1400px] bg-gray-100 min-h-[60vh] h-full w-full max-w-[1400px] mx-auto  px-8">
+    <div className=" bg-gray-100 min-h-[60vh] h-full w-full max-w-[1400px] mx-auto py-5  px-8">
       <div>
         {/* <h2 className='text-heading text-amber-600 text-center pt-5'>
                 Become a Service Provider

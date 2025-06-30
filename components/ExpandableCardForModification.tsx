@@ -1,22 +1,25 @@
 'use client'
 
 import React, { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { CustomerPresentableInterface } from '@/lib/serviceFormInterface'
+import { Trash } from 'lucide-react'
 
 export function ExpandableCardDemo({
   cards,
   activeId,
   onCardClick,
+  onDeleteCard,
 }: {
   cards: CustomerPresentableInterface[]
   activeId?: string | number | null
   onCardClick?: (id: string | number | null) => void
+   onDeleteCard?: (id: string) => void
 }) {
-  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
-    null,
-  )
+
+  
+  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const id = useId()
 
@@ -27,6 +30,21 @@ export function ExpandableCardDemo({
     }
   }, [activeId, cards])
 
+   const deleteCard = async (id: string) => {
+    try {
+      await fetch(`/api/service/${id}`, {
+    method: 'DELETE',
+    }
+      )
+      alert('Service Deleted Successfully')
+      setActive(null)
+      onDeleteCard?.(id) // <-- update parent state
+    } catch (error) {
+      alert('Failed to Delete Service')
+      console.log('Something Wrong ', error)
+    }
+  }
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -34,13 +52,11 @@ export function ExpandableCardDemo({
         onCardClick?.(null)
       }
     }
-
     if (active && typeof active === 'object') {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
     }
-
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [active])
@@ -50,9 +66,9 @@ export function ExpandableCardDemo({
     onCardClick?.(null)
   })
 
-
   return (
-    <div className="font-mono ">
+    <div className="font-mono  min-h-[75vh] w-full mx-auto">
+
       <AnimatePresence>
         {active && typeof active === 'object' && (
           <motion.div
@@ -66,38 +82,28 @@ export function ExpandableCardDemo({
       <AnimatePresence>
         {active && typeof active === 'object' ? (
           <div className="fixed inset-0  grid place-items-center z-[100]">
-
-          
             <motion.div
               layoutId={`card-${active.id}-${id}`}
               ref={ref}
               className=" z-20 w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
-
               <motion.button
-              key={`button-${active.id}-${id}`}
-              layout
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  duration: 0.05,
-                },
-              }}
-              className="flex absolute m-5   lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
-              onClick={() => {
-                setActive(null)
-                onCardClick?.(null)
-              }}
-            >
-              <CloseIcon />
-            </motion.button>
-
+                key={`button-${active.id}-${id}`}
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{
+                  opacity: 0,
+                  transition: { duration: 0.05 },
+                }}
+                className="flex absolute m-5   lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+                onClick={() => {
+                  setActive(null)
+                  onCardClick?.(null)
+                }}
+              >
+                <CloseIcon />
+              </motion.button>
               <motion.div layoutId={`image-${active.id}-${id}`}>
                 <img
                   width={200}
@@ -107,7 +113,6 @@ export function ExpandableCardDemo({
                   className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
                 />
               </motion.div>
-
               <div>
                 <div className="flex justify-between items-start p-4">
                   <div className="">
@@ -128,11 +133,10 @@ export function ExpandableCardDemo({
                       className="text-amber-600 dark:text-neutral-400"
                     >
                       {active.distance !== undefined
-                      ? `${active.distance.toFixed(2)} KM Away`
-                      : ''}
+                        ? `${active.distance.toFixed(2)} KM Away`
+                        : ''}
                     </motion.p>
                   </div>
-
                   <motion.button
                     layoutId={`button-${active.id}-${id}`}
                     className="px-4 py-3 text-sm rounded-full font-bold bg-amber-600 text-white"
@@ -153,12 +157,10 @@ export function ExpandableCardDemo({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="text-gray-600 text-xs md:text-sm lg:text-base  md:h-fit pb-10 flex items-center gap-2 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
-                  ><span className='block text-body text-gray-400 pr-5'>Skills:</span>
+                  >
+                    <span className='block text-body text-gray-400 pr-5'>Skills:</span>
                     {active.skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className='inline-block '
-                      >
+                      <span key={index} className='inline-block '>
                         {skill}
                       </span>
                     ))}
@@ -187,22 +189,22 @@ export function ExpandableCardDemo({
               setActive(card)
               onCardClick?.(card.id)
             }}
-            className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="p-4 flex flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
           >
-            <div className="flex gap-4 flex-col md:flex-row items-center ">
+            <div className="flex gap-4 flex-col flex-row items-center ">
               <motion.div layoutId={`image-${card.id}-${id}`}>
                 <img
                   width={100}
                   height={100}
                   src={card.image}
                   alt={card.name}
-                  className="h-40 w-40 md:h-14 md:w-14 rounded-lg object-cover object-top"
+                  className="h-14 w-14 rounded-lg object-cover object-top"
                 />
               </motion.div>
               <div className="">
                 <motion.h3
                   layoutId={`title-${card.name}-${id}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
+                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center text-left"
                 >
                   {card.name}
                 </motion.h3>
@@ -217,21 +219,23 @@ export function ExpandableCardDemo({
                     layoutId={`description-${card.distance}-${id}`}
                     className="md:ml-10 inline-block text-amber-600  text-center md:text-left"
                   >
-                    {
-                      card.distance !== undefined
-                        ? `${card.distance.toFixed(2)} KM Away`
-                        : ''
-                    }
+                    {card.distance !== undefined
+                      ? `${card.distance.toFixed(2)} KM Away`
+                      : ''}
                   </motion.p>
                 </div>
               </div>
             </div>
-            <motion.button
-              layoutId={`button-${card.id}-${id}`}
-              className="px-4 py-2 text-sm rounded-md font-bold bg-amber-600 text-white hover:bg-amber-500 hover:text-white text-black mt-4 md:mt-0"
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                deleteCard(card.id)
+              }}
+              className="text-white bg-red-500 px-2 py-2 rounded-md hover:scale-111 transition-all cursor-pointer"
             >
-              Show More
-            </motion.button>
+              <Trash />
+            </button>
+
           </motion.div>
         ))}
       </ul>
@@ -242,17 +246,11 @@ export function ExpandableCardDemo({
 export const CloseIcon = () => {
   return (
     <motion.svg
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{
         opacity: 0,
-        transition: {
-          duration: 0.05,
-        },
+        transition: { duration: 0.05 },
       }}
       xmlns="http://www.w3.org/2000/svg"
       width="24"

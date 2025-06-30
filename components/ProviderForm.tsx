@@ -84,6 +84,7 @@ function ProviderForm() {
         body: formData,
       })
       if (!res.ok) {
+        alert('Something Is Wrong, Failed to Submit Service')
         throw new Error('Failed to submit service')
       }
       console.log('Response:', res)
@@ -103,7 +104,7 @@ function ProviderForm() {
 
 
   return (
-    <div className="h-full bg-gray-100 md:p-10   font-mono">
+    <div className="h-full bg-gray-100 md:p-10 py-10   font-mono">
       <h1 className="w-full text-center text-heading text-amber-600 ">
         Register As A Service Provider
       </h1>
