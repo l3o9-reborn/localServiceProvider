@@ -42,31 +42,10 @@ export async function POST(request: NextRequest) {
       bio: formData.get('bio') as string,
       lat: parseFloat(formData.get('lat') as string) || null,
       lng: parseFloat(formData.get('lng') as string) || null,
-      image: formData.get('image') as File | string, // image can be a File or a string (path)
+      image: formData.get('image') as  string, // image can be a File or a string (path)
       email,
     }
     
-
-    // Handle file upload if image is a File
-if (serviceForm.image instanceof File) {
-  const timestamp = Date.now()
-  const uniqueName = `${timestamp}-${serviceForm.image.name}`
-  console.log('Uploading image:', uniqueName)
-  const { data, error } = await supabase.storage
-    .from('serviceproviderimage')
-    .upload(
-      `services/${serviceForm.name}/${uniqueName}`,
-      serviceForm.image,
-    )
-  if (error) throw error
-  // Get public URL right after upload
-  const { data: publicUrlData } = supabase.storage
-    .from('serviceproviderimage')
-    .getPublicUrl(data.path)
-
-  // Store the full public URL
-  serviceForm.image = publicUrlData.publicUrl
-}
 
     console.log('Service Form Data:', serviceForm)
 

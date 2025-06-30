@@ -3,6 +3,7 @@ import React, {  useState } from 'react'
 import { FileUpload } from './ui/file-upload'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
 import LoadingPage from '@/app/loading'
+import { supabase  } from '@/lib/supabaseClient'
 
 // import LocationPicker from './LocationPicker'
 
@@ -49,6 +50,24 @@ function ProviderForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log(form)
+
+    let imageUrl= ''
+
+    if (form.image && form.image instanceof File) {
+      const uniqueName = `${Date.now()}-${form.image.name}`
+      const { data, error } = await supabase.storage
+        .from('serviceproviderimage')
+        .upload(`services/${form.name}/${uniqueName}`, form.image)
+      if (error) throw error
+
+      // 2. Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('serviceproviderimage')
+        .getPublicUrl(data.path)
+      imageUrl = publicUrlData.publicUrl
+    }
+
+
       // Validate required fields
   if (
     !form.name.trim() ||
@@ -74,9 +93,8 @@ function ProviderForm() {
       formData.append('bio', form.bio)
       formData.append('lat', form.lat?.toString() || '')
       formData.append('lng', form.lng?.toString() || '')
-      if (form.image) {
-        formData.append('image', form.image)
-      }
+      formData.append('image', imageUrl)
+
 
       setLoading(true)
       const res = await fetch('/api/service', {
