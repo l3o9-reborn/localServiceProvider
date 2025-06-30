@@ -65,6 +65,12 @@ function ProviderForm() {
         .from('serviceproviderimage')
         .getPublicUrl(data.path)
       imageUrl = publicUrlData.publicUrl
+
+
+        setForm((prev) => ({
+    ...prev,
+    image: imageUrl,
+  }))
     }
 
 
