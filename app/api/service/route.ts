@@ -1,3 +1,8 @@
+export const config = {
+  runtime: 'nodejs',
+}
+
+
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'

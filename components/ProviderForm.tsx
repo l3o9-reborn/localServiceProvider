@@ -207,38 +207,7 @@ function ProviderForm() {
               className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
-          {/* <div className='border-2 border-amber-600 p-2 my-4 rounded-2xl text-amber-600'>
-                <div className='flex flex-col gap-1' >
-                    <label htmlFor="" className='inline-block relative top-4 left-5 bg-gray-800 w-19 text-gray-50 text-subheading'>Address</label>
-                    <input
-                    name='address'
-                    value={form.address}
-                    onChange={handleChange}
-                    type="text" className='px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600' />
-                </div>
-                <div className='grid grid-cols-2 gap-2 mt-4'>
-                    <input
-                    name='union'
-                    value={form.union}
-                    onChange={handleChange}
-                    type="text" placeholder='Union' className='px-6 py-4 border-2 border-gray-50 rounded-md  outline-none hover:border-amber-400 focus:border-amber-600' />
-                    <input
-                    name='subdistrict'
-                    value={form.subdistrict}
-                    onChange={handleChange}
-                    type="text" placeholder='Subdistrict/Upzela' className='px-6 py-4 border-2 border-gray-50 rounded-md  outline-none hover:border-amber-400 focus:border-amber-600'  />
-                    <input
-                    name='district'
-                    value={form.district}
-                    onChange={handleChange}
-                    type="text" placeholder='District' className='px-6 py-4 border-2 border-gray-50 rounded-md  outline-none hover:border-amber-400 focus:border-amber-600'  />
-                    <input
-                    name='post'
-                    value={form.post}
-                    onChange={handleChange}
-                     type="text" placeholder='Post Code' className='px-6 py-4 border-2 border-gray-50 rounded-md  outline-none hover:border-amber-400 focus:border-amber-600'  />
-                </div>
-            </div> */}
+
           {/* here I want to integrate map input */}
           <div>
             <div>Pick Your Working Location</div>
