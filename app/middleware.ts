@@ -20,5 +20,9 @@ export function middleware(request: NextRequest) {
 
 // Enable middleware only for protected routes
 export const config = {
-  matcher: ['/beaserviceprovider', '/getservice', '/your-contacts'],
+  matcher: [
+    '/beaserviceprovider/:path*',
+    '/getservice/:path*',
+    '/your-contacts/:path*',
+  ],
 }
