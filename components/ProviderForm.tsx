@@ -67,10 +67,10 @@ function ProviderForm() {
       imageUrl = publicUrlData.publicUrl
 
 
-        setForm((prev) => ({
-    ...prev,
-    image: imageUrl,
-  }))
+            setForm((prev) => ({
+        ...prev,
+        image: imageUrl,
+      }))
     }
 
 

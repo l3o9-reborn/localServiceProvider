@@ -8,6 +8,8 @@ import { supabase } from '@/lib/supabase'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
 import { cookies } from 'next/headers'
 import { verifyJWT } from '@/lib/jwt' 
+import fuzzysort from 'fuzzysort'
+import stringSimilarity from 'string-similarity'
 
 
 
@@ -71,41 +73,38 @@ export async function POST(request: NextRequest) {
   }
 }
 
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const serviceName = searchParams.get('serviceName')
+
+  const serviceName = searchParams.get('serviceName')?.toLowerCase() || ''
   const lat = parseFloat(searchParams.get('lat') || '')
   const lng = parseFloat(searchParams.get('lng') || '')
   const distance = parseFloat(searchParams.get('distance') || '')
-  const radiusKm = distance || 5 // Default to 5 KM if not provided
+  const radiusKm = distance || 2 // Default radius: 2km
 
   function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
     const R = 6371
     const dLat = ((lat2 - lat1) * Math.PI) / 180
     const dLon = ((lon2 - lon1) * Math.PI) / 180
     const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
         Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2)
+        Math.sin(dLon / 2) ** 2
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     return R * c
   }
 
   try {
-    const { data, error } = await supabase
-      .from('service_form')
-      .select('*')
-
+    const { data, error } = await supabase.from('service_form').select('*')
     if (error) throw error
 
-    // Filter and map to include distance
     const filtered = data
-     //fixed eslint error any 
       .map((service: ServiceFormInterface) => {
         if (
           !Array.isArray(service.services) ||
+          !Array.isArray(service.skills) ||
           typeof service.lat !== 'number' ||
           typeof service.lng !== 'number' ||
           isNaN(lat) ||
@@ -113,30 +112,43 @@ export async function GET(request: NextRequest) {
         ) {
           return null
         }
-        // Service name match (partial, case-insensitive)
-        const matchesService = service.services.some((s: string) =>
-          s.toLowerCase().includes((serviceName || '').toLowerCase())
-        )
-        if (!matchesService) return null
 
-        // Calculate distance
-        const distance = getDistanceFromLatLonInKm(lat, lng, service.lat, service.lng)
-        if (distance > radiusKm) return null
+        const allTerms = [
+          ...service.services.map((s) => s.toLowerCase()),
+          ...service.skills.map((s) => s.toLowerCase()),
+        ]
 
-        // Return service with distance property
-        return { ...service, distance }
+        // --- Try fuzzysort ---
+        const fuzzyMatches = fuzzysort.go(serviceName, allTerms, { threshold: -1000 })
+
+        // --- Fallback: Try string-similarity if no fuzzysort match ---
+        let similarMatch = false
+        if (!fuzzyMatches.length) {
+          const simResult = stringSimilarity.findBestMatch(serviceName, allTerms)
+          if (simResult.bestMatch.rating >= 0.5) {
+            similarMatch = true
+          }
+        }
+
+        // If neither match succeeded, discard this entry
+        if (!fuzzyMatches.length && !similarMatch) return null
+
+        // --- Distance filtering ---
+        const calculatedDistance = getDistanceFromLatLonInKm(lat, lng, service.lat, service.lng)
+        if (calculatedDistance > radiusKm) return null
+
+        return { ...service, distance: calculatedDistance }
       })
-      .filter(Boolean) // Remove nulls
-      .sort((a, b) => (a!.distance as number) - (b!.distance as number)) // Sort by distance ascending
+      .filter(Boolean)
+      .sort((a, b) => (a!.distance as number) - (b!.distance as number))
 
     return NextResponse.json(filtered)
   } catch (error) {
-    //fixed eslint error any 
     const err = error as Error
-    console.error('Error fetching service:', error)
+    console.error('Error fetching service:', err)
     return NextResponse.json(
       { message: 'Error fetching service', error: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
