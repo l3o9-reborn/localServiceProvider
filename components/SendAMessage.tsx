@@ -107,7 +107,7 @@ const handleChange = (
         <button
           disabled={loading}
           type="submit"
-          className="w-full bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-500 transition duration-200"
+          className="w-full cursor-pointer bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-500 transition duration-200"
         >
          { loading? "Sending ..." : "Send Message"}
         </button>

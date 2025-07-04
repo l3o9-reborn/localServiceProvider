@@ -30,7 +30,7 @@ function ServiceProviderSection() {
         </p>
         <button
           onClick={redirectToCreateProvider}
-          className="mt-6 text-amber-600 text-white bg-amber-600 font-light px-6 py-4 border-2 rounded-md text-2xl hover:bg-amber-500 hover:text-white transition-colors duration-300"
+          className="mt-6 text-amber-600 cursor-pointer text-white bg-amber-600 font-light px-6 py-4 border-2 rounded-md text-2xl hover:bg-amber-500 hover:text-white transition-colors duration-300"
         >
           Be a service provider
         </button>

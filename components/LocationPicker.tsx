@@ -116,7 +116,7 @@ function UseCurrentLocationButton({ setPosition }: { setPosition: (latlng: LatLn
   return (
     <button
       type='button'
-    onClick={handleClick} className="absolute bottom-6 right-4 z-[999] px-4 py-2 bg-white rounded-full shadow hover:scale-125 hover:bg-gray-200 transition-transform duration-300">
+    onClick={handleClick} className="absolute cursor-pointer bottom-6 right-4 z-[999] px-4 py-2 bg-white rounded-full shadow hover:scale-125 hover:bg-gray-200 transition-transform duration-300">
       <MapPin className="text-amber-600" />
     </button>
   )
@@ -172,7 +172,7 @@ const zoom = getZoomFromDistance(distance || 2)
     <div className="relative z-1 h-[300px] md:h-[400px] w-full rounded-md overflow-hidden">
       <button
         type="button"
-        className="absolute top-4 left-12 z-[1000] px-4 py-2 bg-white text-gray-900 rounded shadow text-sm font-semibold"
+        className="absolute cursor-pointer top-4 left-12 z-[1000] px-4 py-2 bg-white text-gray-900 rounded shadow text-sm font-semibold hover:scale-105 transition-transform duration-300"
         onClick={() => setLayer(layer === 'satellite' ? 'street' : 'satellite')}
       >
         {layer === 'satellite' ? 'Show Street Map' : 'Show Satellite'}

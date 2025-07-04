@@ -1,28 +1,46 @@
 'use client'
-import React, {  useState } from 'react'
+import React, {  useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
 import { ExpandableCardDemo } from '@/components/ExpandableCards'
 import { ServiceFinderDetails, CustomerPresentableInterface } from '@/lib/serviceFormInterface'
 import dynamic from 'next/dynamic'
+import { useSearchParams } from 'next/navigation'
 
 const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
   ssr: false,
 })
 
 export default function GetServicePage() {
+
+  const searchParams= useSearchParams()
+
   const [form, setForm] = useState<ServiceFinderDetails>({
     serviceName: '',
     lat: null,
     lng: null,
     distance: '', // Default distance in KM
   })
-
+  const [loading, setLoading]= useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
   const [data, setData] = useState<CustomerPresentableInterface[]>([])
   const [selectedProviderId, setSelectedProviderId] = useState<string | number | null>(null)
+
+  useEffect(() => {
+  const serviceNameParam = searchParams.get('serviceName')
+  if (serviceNameParam) {
+    setForm((prev) => ({ ...prev, serviceName: serviceNameParam }))
+  }
+  }, [searchParams])
+
+
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', form)
+    setLoading(true)
+    setHasSearched(true)
     const params = new URLSearchParams()
     if (form.serviceName) params.append('serviceName', form.serviceName)
     if (form.lat !== null) params.append('lat', String(form.lat))
@@ -36,6 +54,8 @@ export default function GetServicePage() {
       setData(data)
     } catch (err) {
       console.error('Error fetching services:', err)
+    } finally{
+      setLoading(false)
     }
   }
 
@@ -80,21 +100,56 @@ export default function GetServicePage() {
             onMarkerClick={(id) => setSelectedProviderId(id)}
           />
 
-          <button
-            type="submit"
-            className="w-full h-12 bg-amber-600 rounded-md mt-2 flex items-center justify-center hover:bg-amber-500 text-white"
-          >
+        <button
+          disabled={loading}
+          type="submit"
+          className="w-full cursor-pointer h-12 bg-amber-600 rounded-md mt-2 flex items-center justify-center hover:bg-amber-500 text-white"
+        >
+          {loading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              Searching...
+            </>
+          ) : (
             <Search />
-          </button>
+          )}
+        </button>
         </form>
       </div>
 
       <div className="mt-6">
-        <ExpandableCardDemo
-          cards={data}
-          activeId={selectedProviderId}
-          onCardClick={(id) => setSelectedProviderId(id)}
-        />
+       <div className="mt-6">
+          {hasSearched && data.length === 0 && !loading ? (
+            <div className="text-center text-gray-600 text-xl py-10">
+              🚫 No service found
+            </div>
+          ) : (
+            <ExpandableCardDemo
+              cards={data}
+              activeId={selectedProviderId}
+              onCardClick={(id) => setSelectedProviderId(id)}
+            />
+          )}
+        </div>
       </div>
     </div>
   )

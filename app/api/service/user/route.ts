@@ -25,12 +25,15 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ services: [], message: error.message }, { status: 500 })
+      const err = error as Error
+      console.log(err)
+      return NextResponse.json({ services: [], message: err.message }, { status: 500 })
     }
 
     return NextResponse.json({ services: data })
   } catch (error) {
     const err = error as Error
+    console.log(err)
     return NextResponse.json({ services: [], message: err.message }, { status: 500 })
   }
 }

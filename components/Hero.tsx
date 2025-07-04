@@ -55,7 +55,7 @@ function Hero() {
         <div className="hero-stagger">
           <button
             onClick={GetIntoServiePage}
-            className="mt-6 text-white bg-amber-600 font-light px-6 py-4 border-2 rounded-md text-2xl hover:bg-amber-400 hover:text-white transition-colors duration-300"
+            className="mt-6 text-white cursor-pointer bg-amber-600 font-light px-6 py-4 border-2 rounded-md text-2xl hover:bg-amber-400 hover:text-white transition-colors duration-300"
           >
             Get Service Near You
           </button>

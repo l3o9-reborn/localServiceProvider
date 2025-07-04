@@ -19,5 +19,5 @@ export async function POST(req: Request) {
 
   await sendMagicLink(email, token)
 
-  return NextResponse.json({ message: 'Magic link sent' })
+  return NextResponse.json({ message: 'Magic link sent to your Email' })
 }

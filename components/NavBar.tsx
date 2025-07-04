@@ -80,7 +80,7 @@ function NavBar() {
             </span>
           ))}
 
-          <span className="my-2">
+          <span className="my-2 cursor-pointer">
             {isLoggedIn === null ? (
               <span className="text-gray-400">Checking...</span>
             ) : isLoggedIn ? (

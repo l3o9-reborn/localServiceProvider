@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, CardTitle, CardContent, CardHeader } from './ui/card'
+import { useRouter } from 'next/navigation'
 
 type ServiceCardProps = {
   logo: React.ElementType// Optional logo icon
@@ -7,10 +8,23 @@ type ServiceCardProps = {
   description: string
 }
 
+
+
 function ServiceCard(props: ServiceCardProps) {
+
+ const router= useRouter()
+
+ const redirectToGetService=()=>{
+  const encodedTitle = encodeURIComponent(title)
+  console.log(title)
+  router.push(`/getservice?serviceName=${encodedTitle}`)
+}
+
   const { logo: logo, title, description } = props
   return (
-    <Card className="bg-gray-700 h-full p-6 hover:scale-105 transition-transform duration-300 shadow-lg">
+    <Card
+      onClick={redirectToGetService}
+    className=" cursor-pointer bg-gray-700 h-full p-6 hover:scale-105 transition-transform duration-300 shadow-lg">
       <CardHeader className="flex items-center justify-center">
         {props.logo && (
           <div className="bg-amber-400 h-15 w-15 flex items-center justify-center rounded-full   ">

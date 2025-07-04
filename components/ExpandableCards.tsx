@@ -178,7 +178,7 @@ export function ExpandableCardDemo({
           </div>
         ) : null}
       </AnimatePresence>
-      <ul className=" mx-auto w-full gap-4">
+      <ul className=" mx-auto w-full gap-4 ">
         {cards.map((card) => (
           <motion.div
             layoutId={`card-${card.id}-${id}`}
@@ -201,30 +201,30 @@ export function ExpandableCardDemo({
               </motion.div>
               <div className="">
                 <motion.h3
-                  layoutId={`title-${card.name}-${id}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
+
+                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left max-w-[300px] min-w-[300px] max-h-5 overflow-hidden"
                 >
                   {card.name}
                 </motion.h3>
-                <div className="flex flex-col md:flex-row flex-1 w-full  items-center justify-between">
+             
                   <motion.p
-                    layoutId={`description-${card.services}-${id}`}
-                    className="inline-block text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+
+                    className="inline-block text-neutral-600 dark:text-neutral-400 text-center md:text-left max-w-[300px] min-w-[300px]  max-h-5 overflow-hidden"
                   >
                     {card.services.join(', ')}
                   </motion.p>
-                  <motion.p
-                    layoutId={`description-${card.distance}-${id}`}
-                    className="md:ml-10 inline-block text-amber-600  text-center md:text-left"
+                 
+
+              </div>
+               <motion.p
+                    className="md:ml-10 inline-block text-amber-600  text-center md:text-right min-w-[80px] "
                   >
                     {
                       card.distance !== undefined
                         ? `${card.distance.toFixed(2)} KM Away`
                         : ''
                     }
-                  </motion.p>
-                </div>
-              </div>
+                </motion.p>
             </div>
             <motion.button
               layoutId={`button-${card.id}-${id}`}

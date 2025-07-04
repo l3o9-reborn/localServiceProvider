@@ -2,7 +2,6 @@
 import React, {  useState } from 'react'
 import { FileUpload } from './ui/file-upload'
 import { ServiceFormInterface } from '@/lib/serviceFormInterface'
-import LoadingPage from '@/app/loading'
 import { supabase  } from '@/lib/supabaseClient'
 
 // import LocationPicker from './LocationPicker'
@@ -18,6 +17,7 @@ function ProviderForm() {
   const [loading, setLoading] = useState(false)
   const [servicesInput, setServicesInput] = useState('')
   const [skillsInput, setSkillsInput] = useState('')
+  const [fileUploadKey, setFileUploadKey] = useState(Date.now())
   const [form, setForm] = useState<ServiceFormInterface>({
     name: '',
     number: '',
@@ -112,6 +112,19 @@ function ProviderForm() {
         throw new Error('Failed to submit service')
       }
       console.log('Response:', res)
+      setForm({
+              name: '',
+              number: '',
+              services: [],
+              skills: [],
+              bio: '',
+              lat: null,
+              lng: null,
+              image: '',
+            })
+      setServicesInput('')
+      setSkillsInput('')
+      setFileUploadKey(Date.now())
 
       setLoading(false)
       setError(false)
@@ -122,9 +135,9 @@ function ProviderForm() {
     }
   }
 
-  if(loading) {
-    return <LoadingPage />
-  }
+  // if(loading) {
+  //   return <LoadingPage />
+  // }
 
 
   return (
@@ -132,7 +145,7 @@ function ProviderForm() {
       <h1 className="w-full text-center text-heading text-amber-600 ">
         Register As A Service Provider
       </h1>
-      <div className="h-full text-white bg-gray-800 p-5 md:m-20  rounded-2xl shadow-lg shadow-amber-600 ">
+      <div className="h-full text-gray-50 bg-gray-800 p-5 md:m-20  rounded-2xl shadow-lg shadow-amber-600 ">
         <form action="" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1 ">
             <label
@@ -147,7 +160,7 @@ function ProviderForm() {
               placeholder='eg. Rahim Uddin'
               value={form.name}
               onChange={handleChange}
-              className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
+              className="bg-gray-800  px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
           <div className="flex flex-col gap-1 ">
@@ -163,7 +176,7 @@ function ProviderForm() {
               onChange={handleChange}
               placeholder='eg. +8801234567890'
               type="text"
-              className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
+              className=" bg-gray-800 text-white px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
           <div className="flex flex-col gap-1 ">
@@ -187,7 +200,7 @@ function ProviderForm() {
                 }))
               }
               type="text"
-              className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
+              className=" bg-gray-800 text-white px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
           <div className="flex flex-col gap-1 ">
@@ -212,7 +225,7 @@ function ProviderForm() {
                 }))
               }
               type="text"
-              className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
+              className=" bg-gray-800 text-white px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
           <div className="flex flex-col gap-1 ">
@@ -228,7 +241,7 @@ function ProviderForm() {
               value={form.bio}
               onChange={handleChange}
               rows={6}
-              className="px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
+              className=" bg-gray-800 text-white px-6 py-4 border-2 border-gray-50 rounded-md outline-none hover:border-amber-400 focus:border-amber-600"
             />
           </div>
 
@@ -251,7 +264,7 @@ function ProviderForm() {
           </div>
 
           <div>
-            <FileUpload onChange={handleImageChage} />
+            <FileUpload key={fileUploadKey} onChange={handleImageChage} />
           </div>
 
           {error && (
@@ -262,9 +275,35 @@ function ProviderForm() {
 
           <button
             type="submit"
-            className="w-full px-12 py-4 bg-amber-600 rounded-md text-gray-50 font-bold hover:bg-amber-500"
+            className="w-full cursor-pointer px-12 py-4 bg-amber-600 rounded-md text-gray-50 font-bold hover:bg-amber-500"
           >
-            Register As a Service Provider
+           {loading ? (
+            <>
+              <svg
+                className="animate-spin w-full h-5 mx-auto text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              Registering...
+            </>
+          ) : (
+            <span>Register As A Service Provider</span>
+          )}
           </button>
           
         </form>

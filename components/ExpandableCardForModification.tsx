@@ -180,7 +180,7 @@ export function ExpandableCardDemo({
           </div>
         ) : null}
       </AnimatePresence>
-      <ul className=" mx-auto w-full gap-4">
+<ul className=" mx-auto w-full gap-4">
         {cards.map((card) => (
           <motion.div
             layoutId={`card-${card.id}-${id}`}
@@ -189,59 +189,59 @@ export function ExpandableCardDemo({
               setActive(card)
               onCardClick?.(card.id)
             }}
-            className="p-4 flex flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
           >
-            <div className="flex gap-4 flex-col flex-row items-center ">
+            <div className="flex gap-4 flex-col md:flex-row items-center ">
               <motion.div layoutId={`image-${card.id}-${id}`}>
                 <img
                   width={100}
                   height={100}
                   src={card.image}
                   alt={card.name}
-                  className="h-14 w-14 rounded-lg object-cover object-top"
+                  className="h-40 w-40 md:h-14 md:w-14 rounded-lg object-cover object-top"
                 />
               </motion.div>
               <div className="">
                 <motion.h3
-                  layoutId={`title-${card.name}-${id}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center text-left"
+                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left max-w-[300px] min-w-[300px] max-h-5 overflow-hidden"
                 >
                   {card.name}
                 </motion.h3>
-                <div className="flex flex-col md:flex-row flex-1 w-full  items-center justify-between">
+            
                   <motion.p
-                    layoutId={`description-${card.services}-${id}`}
-                    className="inline-block text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                    className="inline-block text-neutral-600 dark:text-neutral-400 text-center md:text-left max-w-[300px] min-w-[300px]  max-h-5 overflow-hidden"
                   >
                     {card.services.join(', ')}
                   </motion.p>
-                  <motion.p
-                    layoutId={`description-${card.distance}-${id}`}
-                    className="md:ml-10 inline-block text-amber-600  text-center md:text-left"
-                  >
-                    {card.distance !== undefined
-                      ? `${card.distance.toFixed(2)} KM Away`
-                      : ''}
-                  </motion.p>
-                </div>
+                
+
               </div>
+              <motion.p
+                    className="md:ml-10 inline-block text-amber-600  text-center md:text-right min-w-[80px] "
+                  >
+                    {
+                      card.distance !== undefined
+                        ? `${card.distance.toFixed(2)} KM Away`
+                        : ''
+                    }
+                </motion.p>
             </div>
-            <button
+            <motion.button
               onClick={(e) => {
                 e.stopPropagation()
                 deleteCard(card.id)
               }}
-              className="text-white bg-red-500 px-2 py-2 rounded-md hover:scale-111 transition-all cursor-pointer"
+              className="text-white my-5 bg-red-500 px-2 py-2 rounded-md hover:scale-111 transition-all cursor-pointer"
             >
-              <Trash />
-            </button>
-
+             <Trash/>
+            </motion.button>
           </motion.div>
         ))}
       </ul>
     </div>
   )
 }
+
 
 export const CloseIcon = () => {
   return (
