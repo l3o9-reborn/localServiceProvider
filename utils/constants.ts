@@ -73,22 +73,22 @@ export const serviceCardsData = [
     heading: 'What You Can Do',
     first:
       'Offer any service — from plumbing, beauty, tutoring, repair, to custom gigs.',
-    second: 'Set your own prices, work on your own schedule.',
+    second: 'Get direct call from Customer, work on your own Schedule and Price.',
     third: 'Get discovered by people near you who need your help.',
   },
   {
     heading: 'Why Join Us?',
-    first: 'No upfront costs — sign up and start offering services for free.',
-    second: 'Instant bookings — connect directly with clients, no middleman.',
-    third: ' Trusted profile — build credibility with ratings and reviews.',
+    first: 'No Upfront Costs — sign up and start offering services for free.',
+    second: 'Instant Bookings — connect directly with clients, no middleman.',
+    third: ' Enrich Your Community — Help your own community with your skill',
   },
   {
     heading: 'How It Works',
     first:
       'Create Your Profile Add your photo, skills, service categories, and a short bio.',
     second:
-      'Showcase Your Work Upload pictures, certificates, or testimonials to stand out.',
+      'Client will get your direct number and Call you to make a deal',
     third:
-      'Start Receiving Requests Accept jobs, chat with clients, and build your reputation.',
+      'Start Receiving calls from your clients, and build your reputation.',
   },
 ]

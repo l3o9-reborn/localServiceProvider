@@ -30,7 +30,7 @@ export default function RootLayout({
 
   return (
     <html>
-      <body className={`${geistSans.variable} ${geistMono.variable} w-full antialiased max-w-[1400px] mx-auto`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} w-full antialiased`}>
         {!hideNavAndFooter && <NavBar />}
         {children}
         {!hideNavAndFooter && <Footer />}
